@@ -17,10 +17,21 @@ app.configure(function() {
     // use express' body parser to access body elements later
     app.use(express.bodyParser());
 
-    // connect to mongoDB
-    mongoose.connect("mongodb://localhost/mydb");
+    /*
+     * Connect to mongoDB at localhost using the database "mydb".
+     * This connection will be used by the mongoose API throughout
+     * our code base.
+     */
+    mongoose.connect("mongodb://localhost/mydb", function(error) {
+        // handle the error case
+        if (error) {
+            console.error("Failed to connect to the Mongo server!!");
+            console.error(error);
+            throw error;
+        }
+    });
 
-    // bring in all models into scope
+    // bring in all models into scope (these use mongoose)
     fs.readdirSync("models").forEach(function(modelName) {
         require("./models/" + modelName);
     });
